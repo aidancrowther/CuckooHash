@@ -124,7 +124,7 @@ class cuckooHash<T>{
         int hash2 = hashFunc(o, table2Hash);
 
         if(table1[hash1][0] != null) if(table1[hash1][0].equals(o)) return hash1;
-        if(table2[hash2][0] != null) if(table2[hash2][0].equals(o)) return hash2;
+        if(table2[hash2][0] != null) if(table2[hash2][0].equals(o)) return size+hash2;
 
         return -1;
 
@@ -267,7 +267,7 @@ class cuckooHash<T>{
             if(usedIndex == 1){
                 //If we cant move it to its other position, kick
                 if(table2[toUse][0] != null){
-                    success = kick(table2, get((T) table2[toUse][0]), currDepth+1);
+                    success = kick(table2, get((T) table2[toUse][0])-size, currDepth+1);
                 }
                 //Otherwise add to alternate position
                 if(table2[toUse][0] == null){
