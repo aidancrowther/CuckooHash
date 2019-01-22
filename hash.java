@@ -130,8 +130,21 @@ class cuckooHash<T>{
 
     }
 
-    //Return table 1/2
-    public Object[] getHashObj(){
+    //Return the index of given key
+    public int getNoOffset(T o){
+        
+        int hash1 = hashFunc(o, table1Hash);
+        int hash2 = hashFunc(o, table2Hash);
+
+        if(table1[hash1][0] != null) if(table1[hash1][0].equals(o)) return hash1;
+        if(table2[hash2][0] != null) if(table2[hash2][0].equals(o)) return hash2;
+
+        return -1;
+
+    }
+
+    //Return hash table as an object array
+    protected Object[] getHashObj(){
         
         Object[] newHashObj = new Object[7];
 
