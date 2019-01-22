@@ -6,7 +6,6 @@ class cuckooHash<T>{
 
     //Define constants for the table
     private final int GROWTH_FACTOR = 2;
-    private final int MAX_LOOP_DEPTH = 5;
     private final int MIN_TABLE_SIZE = 10;
     private float MIN_LOAD = (float) 0.2;
     private float MAX_LOAD = (float) 0.4;
@@ -210,7 +209,7 @@ class cuckooHash<T>{
     }
 
     //Calculate the hashes for the object using a given seed value
-    private int hashFunc(T o, int seed){
+    public int hashFunc(T o, int seed){
 
         int hash = o.hashCode();
         Random rand = new Random();
@@ -286,7 +285,7 @@ class cuckooHash<T>{
         Boolean success = false;
 
         //Ensure we aren't in a loop
-        if(currDepth < (size/MAX_LOOP_DEPTH)){
+        if(currDepth < Math.sqrt(size)){
             //Determine where we are removing from
             Object[] toMove = table[index];
             int usedIndex = (int) toMove[3];

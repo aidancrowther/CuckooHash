@@ -1,6 +1,8 @@
 import java.util.Random;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
+import java.util.Map;
 
 public class verify{
 
@@ -9,7 +11,7 @@ public class verify{
 
     public static void main(String[] args){
 
-        int numStrings = 2000;
+        int numStrings = 1000;
 
         String[] strings = new String[numStrings];
 
