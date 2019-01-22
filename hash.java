@@ -5,8 +5,11 @@ import java.util.Random;
 class cuckooHash<T>{
 
     //Define constants for the table
-    private final int GROWTH_FACTOR = 10;
+    private final int GROWTH_FACTOR = 2;
     private final int MAX_LOOP_DEPTH = 16;
+    private final int MIN_TABLE_SIZE = 10;
+    private float MIN_LOAD = (float) 0.2;
+    private float MAX_LOAD = (float) 0.5;
 
     //General hash table variables
     private int size = 0;
@@ -24,15 +27,26 @@ class cuckooHash<T>{
 
     //Default constructor
     public cuckooHash(){
-        this(10);
+
+        this(10, (float) 0.2, (float) 0.5);
+
+    }
+
+    //Construct with specified min and max load factors
+    public cuckooHash(float min, float max){
+
+        this(10, min, max);
+
     }
 
     //Construct with specified size
-    public cuckooHash(int size){
+    public cuckooHash(int size, float min, float max){
 
         this.size = size;
         this.table1 = new Object[size][4];
         this.table2 = new Object[size][4];
+        this.MIN_LOAD = min;
+        this.MAX_LOAD = max;
 
     }
 
@@ -169,7 +183,7 @@ class cuckooHash<T>{
     private void reHash(T toAdd, Boolean add){
 
         //Generate new table
-        cuckooHash<T> newHash = new cuckooHash<>(size);
+        cuckooHash<T> newHash = new cuckooHash<>(size, MIN_LOAD, MAX_LOAD);
         Boolean rehashing = true;
 
         //Copy over all elements and ensure no collisions
@@ -209,9 +223,9 @@ class cuckooHash<T>{
 
         float load = getLoad();
 
-        if(load < 0.2 && size > GROWTH_FACTOR){
+        if(load < MIN_LOAD && size > MIN_TABLE_SIZE){
 
-            cuckooHash<T> newHash = new cuckooHash<>(size-GROWTH_FACTOR);
+            cuckooHash<T> newHash = new cuckooHash<>(size/GROWTH_FACTOR, MIN_LOAD, MAX_LOAD);
             Boolean success = true;
 
             for(Object[] o : table1){
@@ -228,9 +242,9 @@ class cuckooHash<T>{
 
         }
 
-        else if(load > 0.5){
+        else if(load > MAX_LOAD){
 
-            cuckooHash<T> newHash = new cuckooHash<>(size+GROWTH_FACTOR);
+            cuckooHash<T> newHash = new cuckooHash<>(size*GROWTH_FACTOR, MIN_LOAD, MAX_LOAD);
             Boolean success = true;
 
             for(Object[] o : table1){
@@ -264,7 +278,7 @@ class cuckooHash<T>{
 
     }
 
-    //Begin kick operation in order to make space in the table
+    //Begin recursive kick operation in order to make space in the table
     private Boolean kick(Object[][] table, int index, int currDepth){
 
         Boolean success = false;
