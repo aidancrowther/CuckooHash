@@ -2,6 +2,11 @@
 
 A simple cuckoo hash implementation used to practice hash table concepts
 
+Declaration:
+
+  - cuckooHash\<Type\>(): Declares a new cuckooHash table with size 10, min load 0.2 and max load 0.5
+  - cuckooHash\<Type\>(int, int): Declares a new cuckooHash table with size 10, min load int1 and max load int2
+
 Methods:
 
   - insert(Object): Add specified object to the hash table
