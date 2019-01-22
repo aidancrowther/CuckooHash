@@ -6,10 +6,10 @@ class cuckooHash<T>{
 
     //Define constants for the table
     private final int GROWTH_FACTOR = 2;
-    private final int MAX_LOOP_DEPTH = 16;
+    private final int MAX_LOOP_DEPTH = 5;
     private final int MIN_TABLE_SIZE = 10;
     private float MIN_LOAD = (float) 0.2;
-    private float MAX_LOAD = (float) 0.5;
+    private float MAX_LOAD = (float) 0.4;
 
     //General hash table variables
     private int size = 0;
@@ -28,7 +28,7 @@ class cuckooHash<T>{
     //Default constructor
     public cuckooHash(){
 
-        this(10, (float) 0.2, (float) 0.5);
+        this(10, (float) 0.2, (float) 0.4);
 
     }
 
@@ -213,9 +213,11 @@ class cuckooHash<T>{
     private int hashFunc(T o, int seed){
 
         int hash = o.hashCode();
-        hash = Math.abs(Integer.rotateLeft(hash, seed));
+        Random rand = new Random();
+        rand.setSeed(hash*seed);
+        hash = rand.nextInt();
 
-        return hash%size;
+        return Math.abs(hash%size);
     }
 
     //Resize the table when load factor exceeds the given bounds
@@ -284,7 +286,7 @@ class cuckooHash<T>{
         Boolean success = false;
 
         //Ensure we aren't in a loop
-        if(currDepth < MAX_LOOP_DEPTH){
+        if(currDepth < (size/MAX_LOOP_DEPTH)){
             //Determine where we are removing from
             Object[] toMove = table[index];
             int usedIndex = (int) toMove[3];
